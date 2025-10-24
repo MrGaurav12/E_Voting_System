@@ -114,6 +114,7 @@ class _VoteCastingScreenState extends State<VoteCastingScreen> {
     });
 
     final success = await _voteService.castVote(partyName);
+    
 
     setState(() {
       _isLoading = false;
