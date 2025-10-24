@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class VotingScreen extends StatefulWidget {
-  const VotingScreen({super.key});
-
   @override
   _VotingScreenState createState() => _VotingScreenState();
 }
@@ -17,7 +15,7 @@ class _VotingScreenState extends State<VotingScreen>
   final TextEditingController _voterIdController = TextEditingController();
 
   // State management
-  final bool _isLoading = false;
+  bool _isLoading = false;
   bool _isVerifying = false;
   bool _isVoting = false;
   bool _voterVerified = false;
@@ -27,7 +25,7 @@ class _VotingScreenState extends State<VotingScreen>
   String _voterId = '';
 
   // Voting state
-  final Map<String, String?> _selectedCandidates = {
+  Map<String, String?> _selectedCandidates = {
     'National Level': null,
     'State Level': null,
     'Local Level': null,
@@ -450,7 +448,7 @@ class _VotingScreenState extends State<VotingScreen>
                 ],
               ),
             );
-          }),
+          }).toList(),
           SizedBox(height: 16),
           Container(
             padding: EdgeInsets.all(12),
@@ -1111,7 +1109,8 @@ class Candidate {
 class VoteSuccessScreen extends StatelessWidget {
   final String voterName;
 
-  const VoteSuccessScreen({super.key, required this.voterName});
+  const VoteSuccessScreen({Key? key, required this.voterName})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1218,7 +1217,8 @@ class VoteSuccessScreen extends StatelessWidget {
 class AlreadyVotedScreen extends StatelessWidget {
   final String voterName;
 
-  const AlreadyVotedScreen({super.key, required this.voterName});
+  const AlreadyVotedScreen({Key? key, required this.voterName})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {

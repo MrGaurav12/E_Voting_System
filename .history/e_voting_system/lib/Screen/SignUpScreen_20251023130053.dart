@@ -1,42 +1,48 @@
-import 'package:e_voting_system/Screen/SignUpScreen.dart';
 import 'package:e_voting_system/Screen/homepage.dart';
+import 'package:e_voting_system/Screen/logingpage.dart';
 import 'package:e_voting_system/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   final AuthService _authService = AuthService();
   bool _isLoading = false;
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _rememberMe = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _signIn() async {
+  Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true;
     });
 
-    final String? error = await _authService.signIn(
+    final String? error = await _authService.signUp(
+      name: _nameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
@@ -47,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (error == null) {
       if (!mounted) return;
+      _showSuccessDialog();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const ElectionApp()),
@@ -55,6 +62,28 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       _showErrorDialog(error);
     }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green),
+            SizedBox(width: 8),
+            Text('Success'),
+          ],
+        ),
+        content: const Text('Account created successfully!'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showErrorDialog(String message) {
@@ -77,35 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _resetPassword() async {
-    if (_emailController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email first'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
-
-    final String? error = await _authService.resetPassword(
-      _emailController.text.trim(),
-    );
-
-    if (error == null) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password reset email sent to ${_emailController.text}'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      if (!mounted) return;
-      _showErrorDialog(error);
-    }
   }
 
   @override
@@ -132,16 +132,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildHeader(),
                 const SizedBox(height: 32),
                 
-                // Login Form
-                _buildLoginForm(),
+                // Signup Form
+                _buildSignupForm(),
                 const SizedBox(height: 24),
                 
-                // Login Button
-                _buildLoginButton(),
+                // Signup Button
+                _buildSignupButton(),
                 const SizedBox(height: 24),
                 
-                // Signup Link
-                _buildSignupLink(),
+                // Login Link
+                _buildLoginLink(),
               ],
             ),
           ),
@@ -161,14 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
             shape: BoxShape.circle,
           ),
           child: const Icon(
-            Icons.person,
+            Icons.person_add_alt_1,
             color: Colors.white,
             size: 40,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          'Welcome Back',
+          'Create Account',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 32,
@@ -177,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to continue',
+          'Sign up to get started',
           style: GoogleFonts.poppins(
             color: Colors.white70,
             fontSize: 16,
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildSignupForm() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -205,6 +205,10 @@ class _LoginScreenState extends State<LoginScreen> {
         key: _formKey,
         child: Column(
           children: [
+            // Name Field
+            _buildNameField(),
+            const SizedBox(height: 16),
+            
             // Email Field
             _buildEmailField(),
             const SizedBox(height: 16),
@@ -213,11 +217,38 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildPasswordField(),
             const SizedBox(height: 16),
             
-            // Remember Me & Forgot Password
-            _buildRememberForgot(),
+            // Confirm Password Field
+            _buildConfirmPasswordField(),
+            const SizedBox(height: 16),
+            
+            // Remember Me Checkbox
+            _buildRememberMe(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildNameField() {
+    return TextFormField(
+      controller: _nameController,
+      decoration: InputDecoration(
+        labelText: 'Full Name',
+        prefixIcon: const Icon(Icons.person),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667EEA)),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your name';
+        }
+        return null;
+      },
     );
   }
 
@@ -277,12 +308,52 @@ class _LoginScreenState extends State<LoginScreen> {
         if (value == null || value.isEmpty) {
           return 'Please enter your password';
         }
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters';
+        }
         return null;
       },
     );
   }
 
-  Widget _buildRememberForgot() {
+  Widget _buildConfirmPasswordField() {
+    return TextFormField(
+      controller: _confirmPasswordController,
+      obscureText: _obscureConfirmPassword,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        prefixIcon: const Icon(Icons.lock_outline),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            setState(() {
+              _obscureConfirmPassword = !_obscureConfirmPassword;
+            });
+          },
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667EEA)),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please confirm your password';
+        }
+        if (value != _passwordController.text) {
+          return 'Passwords do not match';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildRememberMe() {
     return Row(
       children: [
         Checkbox(
@@ -300,7 +371,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const Spacer(),
         TextButton(
-          onPressed: _resetPassword,
+          onPressed: () {
+            // Forgot password functionality
+          },
           child: Text(
             'Forgot Password?',
             style: GoogleFonts.poppins(
@@ -312,12 +385,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildSignupButton() {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: _isLoading ? null : _signIn,
+        onPressed: _isLoading ? null : _signUp,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: const Color(0xFF667EEA),
@@ -337,7 +410,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               )
             : Text(
-                'Sign In',
+                'Sign Up',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -347,12 +420,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSignupLink() {
+  Widget _buildLoginLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account?",
+          'Already have an account?',
           style: GoogleFonts.poppins(
             color: Colors.white,
           ),
@@ -361,11 +434,11 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SignupScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
           child: Text(
-            'Sign Up',
+            'Sign In',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontWeight: FontWeight.bold,

@@ -1,6 +1,8 @@
 // vote_casting_screen.dart
 import 'package:e_voting_system/services/voter_services.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class VoteCastingScreen extends StatefulWidget {
   const VoteCastingScreen({super.key});

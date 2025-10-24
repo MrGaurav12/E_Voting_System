@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 
 
 class VoterRegistrationScreen extends StatefulWidget {
-  const VoterRegistrationScreen({super.key});
-
   @override
   _VoterRegistrationScreenState createState() => _VoterRegistrationScreenState();
 }
@@ -38,7 +36,7 @@ class _VoterRegistrationScreenState extends State<VoterRegistrationScreen>
   bool _hasExistingVoter = false;
   Map<String, dynamic>? _existingVoterData;
   String _errorMessage = '';
-  final String _infoMessage = '';
+  String _infoMessage = '';
 
   // State codes mapping
   final Map<String, String> _stateCodes = {
@@ -864,7 +862,7 @@ class _VoterRegistrationScreenState extends State<VoterRegistrationScreen>
 
                                 // Gender
                                 DropdownButtonFormField<String>(
-                                  initialValue: _gender,
+                                  value: _gender,
                                   decoration: InputDecoration(
                                     labelText: 'Gender *',
                                     border: OutlineInputBorder(),
@@ -956,7 +954,7 @@ class _VoterRegistrationScreenState extends State<VoterRegistrationScreen>
 
                                 // State
                                 DropdownButtonFormField<String>(
-                                  initialValue: _state,
+                                  value: _state,
                                   decoration: InputDecoration(
                                     labelText: 'State *',
                                     border: OutlineInputBorder(),
@@ -992,7 +990,7 @@ class _VoterRegistrationScreenState extends State<VoterRegistrationScreen>
 
                                 // Nationality
                                 DropdownButtonFormField<String>(
-                                  initialValue: _nationality,
+                                  value: _nationality,
                                   decoration: InputDecoration(
                                     labelText: 'Nationality *',
                                     border: OutlineInputBorder(),

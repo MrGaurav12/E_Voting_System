@@ -400,7 +400,7 @@ class _VoterServicesScreenState extends State<VoterServicesScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              SizedBox(
+              Container(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {

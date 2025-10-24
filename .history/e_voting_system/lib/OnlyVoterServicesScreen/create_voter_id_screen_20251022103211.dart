@@ -514,7 +514,7 @@ class _CreateVoterIdScreenState extends State<CreateVoterIdScreen> {
 
           // Gender
           DropdownButtonFormField<String>(
-            initialValue: _gender,
+            value: _gender,
             decoration: const InputDecoration(
               labelText: 'Gender',
               border: OutlineInputBorder(),
@@ -583,7 +583,7 @@ class _CreateVoterIdScreenState extends State<CreateVoterIdScreen> {
 
           // State
           DropdownButtonFormField<String>(
-            initialValue: _state,
+            value: _state,
             decoration: const InputDecoration(
               labelText: 'State',
               border: OutlineInputBorder(),
@@ -623,7 +623,7 @@ class _CreateVoterIdScreenState extends State<CreateVoterIdScreen> {
 
           // Nationality
           DropdownButtonFormField<String>(
-            initialValue: _nationality,
+            value: _nationality,
             decoration: const InputDecoration(
               labelText: 'Nationality',
               border: OutlineInputBorder(),
@@ -867,11 +867,11 @@ class _CreateVoterIdScreenState extends State<CreateVoterIdScreen> {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/main');
                 },
+                child: const Text('Continue'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: Colors.blue[700],
                 ),
-                child: const Text('Continue'),
               ),
             ),
           ],
