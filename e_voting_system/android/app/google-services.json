@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "856690175231",
+    "firebase_url": "https://evotingsystem-33ccd-default-rtdb.firebaseio.com",
+    "project_id": "evotingsystem-33ccd",
+    "storage_bucket": "evotingsystem-33ccd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856690175231:android:05e878f5a8152ca7e5f0ca",
+        "android_client_info": {
+          "package_name": "com.example.e_voting_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWoIdpZo12RjKtktoVxErRkNqWO7C43tU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
